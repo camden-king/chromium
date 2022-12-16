@@ -30,5 +30,6 @@ message WebAppProtocolHandler {
 message WebAppOsIntegrationState {
   optional ShortcutState shortcut_states = 1;
   repeated WebAppProtocolHandler manifest_protocol_handlers_states = 2;
+  optional bool is_os_registration_required = 3;
   // Add data states for other OS integration hooks here.
 }
