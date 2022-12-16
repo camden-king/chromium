@@ -18,7 +18,7 @@ class WebAppRegistrar;
 
 class UninstallationViaOsSettingsSubManager : public OsIntegrationSubManager {
  public:
-  UninstallationViaOsSettingsSubManager(WebAppRegistrar& registrar);
+  explicit UninstallationViaOsSettingsSubManager(WebAppRegistrar& registrar);
    ~UninstallationViaOsSettingsSubManager() override;
    void Start() override;
    void Shutdown() override;
