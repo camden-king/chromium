@@ -21,7 +21,7 @@
 
 namespace web_app {
 
-UninstallationViaOsSettingsSubManager::UninstallationViaOsSettingsSubManager() = default;
+UninstallationViaOsSettingsSubManager::UninstallationViaOsSettingsSubManager(WebAppRegistrar& registrar) : registrar_(registrar) {}
 
 UninstallationViaOsSettingsSubManager::~UninstallationViaOsSettingsSubManager() = default;
 
@@ -29,13 +29,13 @@ void UninstallationViaOsSettingsSubManager::Configure(
     const AppId& app_id,
     proto::WebAppOsIntegrationState& desired_state,
     base::OnceClosure configure_done) {
-    // WebApp* web_app = registrar.GetAppById(app_id);
-    // if(!web_app){
-    //     std::move(configure_done).Run(); 
-    //     return;
-    // }
+    const WebApp* web_app = registrar_->GetAppById(app_id);
+    if(!web_app){
+      std::move(configure_done).Run(); 
+      return;
+    }
 
-    // desired_state.is_os_registration_required = web_app->CanUserUninstallWebApp();
+    desired_state.set_is_os_registration_required(web_app->CanUserUninstallWebApp());
 }
 
 void UninstallationViaOsSettingsSubManager::Start() {}
