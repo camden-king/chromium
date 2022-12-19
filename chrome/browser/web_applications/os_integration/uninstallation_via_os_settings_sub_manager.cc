@@ -17,25 +17,28 @@
 #include "chrome/browser/web_applications/web_app_install_info.h"
 #include "chrome/browser/web_applications/web_app_proto_utils.h"
 #include "chrome/browser/web_applications/web_app_registrar.h"
-#include "components/sync/base/time.h"
 
 namespace web_app {
 
-UninstallationViaOsSettingsSubManager::UninstallationViaOsSettingsSubManager(WebAppRegistrar& registrar) : registrar_(registrar) {}
+UninstallationViaOsSettingsSubManager::UninstallationViaOsSettingsSubManager(
+    WebAppRegistrar& registrar)
+    : registrar_(registrar) {}
 
-UninstallationViaOsSettingsSubManager::~UninstallationViaOsSettingsSubManager() = default;
+UninstallationViaOsSettingsSubManager::
+    ~UninstallationViaOsSettingsSubManager() = default;
 
 void UninstallationViaOsSettingsSubManager::Configure(
     const AppId& app_id,
     proto::WebAppOsIntegrationState& desired_state,
     base::OnceClosure configure_done) {
-    const WebApp* web_app = registrar_->GetAppById(app_id);
-    if(!web_app){
-      std::move(configure_done).Run(); 
-      return;
-    }
+  const WebApp* web_app = registrar_->GetAppById(app_id);
+  if (!web_app) {
+    std::move(configure_done).Run();
+    return;
+  }
 
-    desired_state.set_is_os_registration_required(web_app->CanUserUninstallWebApp());
+  desired_state.set_is_os_registration_required(
+      web_app->CanUserUninstallWebApp());
 }
 
 void UninstallationViaOsSettingsSubManager::Start() {}
