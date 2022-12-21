@@ -38,6 +38,7 @@
 #include "chrome/browser/web_applications/file_utils_wrapper.h"
 #include "chrome/browser/web_applications/web_app.h"
 #include "chrome/browser/web_applications/web_app_icon_generator.h"
+#include "chrome/browser/web_applications/web_app_install_info.h"
 #include "chrome/browser/web_applications/web_app_registrar.h"
 #include "chrome/browser/web_applications/web_app_utils.h"
 #include "chrome/common/chrome_features.h"
@@ -242,9 +243,7 @@ TypedResult<SkBitmap> ReadIconBlocking(scoped_refptr<FileUtilsWrapper> utils,
 // Returns null base::Time if any errors occurred.
 TypedResult<base::Time> ReadIconTimeBlocking(
     scoped_refptr<FileUtilsWrapper> utils,
-    const base::FilePath& web_apps_directory,
-    const IconId& icon_id) {
-  base::FilePath icon_file = GetIconFileName(web_apps_directory, icon_id);
+    base::FilePath icon_file) {
   base::File::Info file_info;
   if (!utils->GetFileInfo(icon_file, &file_info)) {
     return {.error_log = {CreateError(
@@ -351,8 +350,9 @@ ReadIconsLastUpdateTimeBlocking(scoped_refptr<FileUtilsWrapper> utils,
 
   for (SquareSizePx icon_size_px : icon_sizes) {
     IconId icon_id(app_id, purpose, icon_size_px);
+    base::FilePath icon_file = GetIconFileName(web_apps_directory, icon_id);
     TypedResult<base::Time> read_result =
-        ReadIconTimeBlocking(utils, web_apps_directory, icon_id);
+        ReadIconTimeBlocking(utils, icon_file);
     read_result.DepositErrorLog(result.error_log);
     if (!read_result.value.is_null())
       result.value[icon_size_px] = std::move(read_result.value);
@@ -414,6 +414,53 @@ TypedResult<ShortcutsMenuIconBitmaps> ReadShortcutsMenuIconsBlocking(
     results.value.push_back(std::move(result));
   }
   return results;
+}
+
+struct ShortcutIconData {
+ base::flat_map<SquareSizePx, base::Time> any_icons;
+ base::flat_map<SquareSizePx, base::Time> maskable_icons;
+ base::flat_map<SquareSizePx, base::Time> monochrome_icons;
+};
+using ShortcutIconDataVector = std::vector<ShortcutMenuIconTimes>;
+
+// Performs blocking I/O. May be called on another thread.
+TypedResult<ShortcutIconDataVector> ReadShortcutMenuIconsWithTimestampBlocking(
+   scoped_refptr<FileUtilsWrapper> utils,
+   const base::FilePath& web_apps_directory,
+   const AppId& app_id,
+   const std::vector<IconSizes>& shortcuts_menu_icons_sizes) {
+ TypedResult<ShortcutIconDataVector> results;
+ int curr_index = 0;
+ for (const auto& icon_sizes : shortcuts_menu_icons_sizes) {
+   ShortcutIconData data;
+   for (IconPurpose purpose : kIconPurposes) {
+     base::flat_map<SquareSizePx, base::Time> bitmap_with_time;
+ 
+     for (SquareSizePx icon_size_px : icon_sizes.GetSizesForPurpose(purpose)) {
+               base::FilePath file_name = GetManifestResourcesShortcutsMenuIconFileName(
+     web_apps_directory, app_id, purpose, curr_index, icon_size_px);
+       TypedResult<base::Time> read_result = ReadIconTimeBlocking(utils, file_name);
+       read_result.DepositErrorLog(results.error_log);
+       if (!read_result.value.is_null())
+         bitmap_with_time[icon_size_px] = std::move(read_result.value);
+     }
+ 
+    if(purpose == IconPurpose::ANY){
+      data.any_icons = bitmap_with_time;
+    } else if(purpose == IconPurpose::MONOCHROME){
+      data.monochrome_icons = bitmap_with_time;
+    }else if(purpose == IconPurpose::MASKABLE){
+      data.maskable_icons = bitmap_with_time;
+    }
+   }
+ 
+   ++curr_index;
+   // We always push_back (even when result is empty) to keep a given
+   // std::map's index in sync with that of its corresponding shortcuts menu
+   // item.
+   results.value.push_back(std::move(data));
+ }
+ return results;
 }
 
 // Performs blocking I/O. May be called on another thread.
@@ -879,6 +926,26 @@ void WebAppIconManager::ReadIcons(const AppId& app_id,
       base::BindOnce(&LogErrorsCallCallback<std::map<SquareSizePx, SkBitmap>>,
                      GetWeakPtr(), std::move(callback)));
 }
+
+void WebAppIconManager::ReadAllShortcutMenuIconsWithTimestamp(
+   const AppId& app_id,
+   ShortcutIconDataCallback callback) {
+ DCHECK_CURRENTLY_ON(content::BrowserThread::UI);
+ const WebApp* web_app = registrar_->GetAppById(app_id);
+ if (!web_app) {
+   std::move(callback).Run(ShortcutMenuIconTimes());
+   return;
+ }
+ 
+ icon_task_runner_->PostTaskAndReplyWithResult(
+     FROM_HERE,
+     base::BindOnce(ReadShortcutMenuIconsWithTimestampBlocking, utils_,
+                    web_apps_directory_, app_id,
+                    web_app->downloaded_shortcuts_menu_icons_sizes()),
+     base::BindOnce(&LogErrorsCallCallback<ShortcutMenuIconTimes>,
+                    GetWeakPtr(), std::move(callback)));
+}
+
 
 void WebAppIconManager::ReadIconsLastUpdateTime(
     const AppId& app_id,
