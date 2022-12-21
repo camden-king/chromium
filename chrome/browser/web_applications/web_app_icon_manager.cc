@@ -421,7 +421,7 @@ struct ShortcutIconData {
  base::flat_map<SquareSizePx, base::Time> maskable_icons;
  base::flat_map<SquareSizePx, base::Time> monochrome_icons;
 };
-using ShortcutIconDataVector = std::vector<ShortcutMenuIconTimes>;
+using ShortcutIconDataVector = std::vector<ShortcutIconData>;
 
 // Performs blocking I/O. May be called on another thread.
 TypedResult<ShortcutIconDataVector> ReadShortcutMenuIconsWithTimestampBlocking(
