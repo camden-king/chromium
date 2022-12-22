@@ -101,9 +101,11 @@ class WebAppIconManager : public WebAppInstallManagerObserver {
                  ReadIconsCallback callback);
 
   using ShortcutMenuIconTimes =
-      base::flat_map<IconPurpose, base::flat_map<IconSizes, base::Time>>;
+      base::flat_map<IconPurpose, base::flat_map<SquareSizePx, base::Time>>;
+  using ShortcutIconDataVector = std::vector<ShortcutMenuIconTimes>;
   using ShortcutIconDataCallback =
-      base::OnceCallback<void(ShortcutMenuIconTimes)>;
+      base::OnceCallback<void(ShortcutIconDataVector)>;
+    
   void ReadAllShortcutMenuIconsWithTimestamp(const AppId& app_id,
                                              ShortcutIconDataCallback callback);
 
