@@ -422,15 +422,12 @@ TypedResult<WebAppIconManager::ShortcutIconDataVector> ReadShortcutMenuIconsWith
    const base::FilePath& web_apps_directory,
    const AppId& app_id,
    const std::vector<IconSizes>& shortcuts_menu_icons_sizes) {
-    DLOG(WARNING) << shortcuts_menu_icons_sizes.size();
  TypedResult<WebAppIconManager::ShortcutIconDataVector> results;
  int curr_index = 0;
  for (const auto& icon_sizes : shortcuts_menu_icons_sizes) {
    WebAppIconManager::ShortcutMenuIconTimes data;
-   DLOG(WARNING) << __func__;
    for (IconPurpose purpose : kIconPurposes) {
      base::flat_map<SquareSizePx, base::Time> bitmap_with_time;
- DLOG(WARNING) << __func__;
      for (SquareSizePx icon_size_px : icon_sizes.GetSizesForPurpose(purpose)) {
                base::FilePath file_name = GetManifestResourcesShortcutsMenuIconFileName(
      web_apps_directory, app_id, purpose, curr_index, icon_size_px);
@@ -439,24 +436,14 @@ TypedResult<WebAppIconManager::ShortcutIconDataVector> ReadShortcutMenuIconsWith
        if (!read_result.value.is_null())
          bitmap_with_time[icon_size_px] = std::move(read_result.value);
      }
-    DLOG(WARNING) << __func__;
     data[purpose] = bitmap_with_time;
-    // if(purpose == IconPurpose::ANY){
-    //   data.any_icons = bitmap_with_time;
-    // } else if(purpose == IconPurpose::MONOCHROME){
-    //   data.monochrome_icons = bitmap_with_time;
-    // }else if(purpose == IconPurpose::MASKABLE){
-    //   data.maskable_icons = bitmap_with_time;
-    // }
    }
- DLOG(WARNING) << __func__;
    ++curr_index;
    // We always push_back (even when result is empty) to keep a given
    // std::map's index in sync with that of its corresponding shortcuts menu
    // item.
    results.value.push_back(std::move(data));
  }
- DLOG(WARNING) << __func__;
  return results;
 }
 
@@ -934,7 +921,6 @@ void WebAppIconManager::ReadAllShortcutMenuIconsWithTimestamp(
    std::move(callback).Run(ShortcutIconDataVector());
    return;
  }
- DLOG(WARNING) << __func__;
  icon_task_runner_->PostTaskAndReplyWithResult(
      FROM_HERE,
      base::BindOnce(ReadShortcutMenuIconsWithTimestampBlocking, utils_,
