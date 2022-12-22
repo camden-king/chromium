@@ -688,6 +688,35 @@ TEST_F(WebAppIconManagerTest, ReadAllIconsLastUpdateTime) {
   EXPECT_FALSE(time_data_map[sizes_px[1]].is_null());
 }
 
+TEST_F(WebAppIconManagerTest, ReadAllShortcutMenuIconsWithTimestamp) {
+  auto web_app = test::CreateWebApp();
+  const AppId app_id = web_app->app_id();
+
+  DLOG(WARNING) << __func__;
+
+  const std::vector<int> sizes_px{icon_size::k256, icon_size::k512};
+  const std::vector<SkColor> colors{SK_ColorGREEN, SK_ColorYELLOW};
+  IconManagerWriteGeneratedIcons(icon_manager(), app_id,
+                                 {{IconPurpose::ANY, sizes_px, colors}});
+
+DLOG(WARNING) << __func__;
+  web_app->SetDownloadedIconSizes(IconPurpose::ANY, sizes_px);
+
+  AddAppToRegistry(std::move(web_app));
+  base::test::TestFuture<std::vector<base::flat_map<IconPurpose, base::flat_map<SquareSizePx, base::Time>>>> future;
+  {
+    icon_manager().ReadAllShortcutMenuIconsWithTimestamp(app_id, future.GetCallback());
+    EXPECT_TRUE(future.Wait());
+  }
+  DLOG(WARNING) << __func__;
+  std::vector<base::flat_map<IconPurpose, base::flat_map<SquareSizePx, base::Time>>> time_data_map = future.Get();
+  DLOG(WARNING) << time_data_map.size();
+  EXPECT_FALSE(time_data_map[0][IconPurpose::ANY][sizes_px[0]].is_null());
+  DLOG(WARNING) << __func__;
+  EXPECT_FALSE(time_data_map[0][IconPurpose::ANY][sizes_px[1]].is_null());
+  DLOG(WARNING) << __func__;
+}
+
 TEST_F(WebAppIconManagerTest, ReadAllIcons_AnyAndMaskable) {
   auto web_app = test::CreateWebApp();
   const AppId app_id = web_app->app_id();
