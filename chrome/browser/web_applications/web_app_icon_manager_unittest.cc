@@ -694,26 +694,20 @@ TEST_F(WebAppIconManagerTest, ReadAllShortcutMenuIconsWithTimestamp) {
 
   const int num_menu_items = 3;
 
-  const std::vector<int> sizes_any = {icon_size::k64, icon_size::k128,
+  const std::vector<int> sizes = {icon_size::k64, icon_size::k128,
                                       icon_size::k256};
-  const std::vector<SkColor> colors_any = {SK_ColorRED, SK_ColorWHITE,
+  const std::vector<SkColor> colors= {SK_ColorRED, SK_ColorRED,
                                            SK_ColorBLUE};
-
-  const std::vector<int> sizes_maskable = {icon_size::k64};
-  const std::vector<SkColor> colors_maskable = {SK_ColorCYAN};
-
-  const std::vector<int> sizes_monochrome = {icon_size::k64};
-  const std::vector<SkColor> colors_monochrome = {SK_ColorGREEN};
 
   WriteGeneratedShortcutsMenuIcons(
       app_id,
-      {{IconPurpose::ANY, sizes_any, colors_any},
-       {IconPurpose::MASKABLE, sizes_maskable, colors_maskable},
-       {IconPurpose::MONOCHROME, sizes_monochrome, colors_monochrome}},
+      {{IconPurpose::ANY, sizes, colors},
+       {IconPurpose::MASKABLE, sizes, colors},
+       {IconPurpose::MONOCHROME, sizes, colors}},
       num_menu_items);
   web_app->SetDownloadedShortcutsMenuIconsSizes(
       CreateDownloadedShortcutsMenuIconsSizes(
-          sizes_any, sizes_maskable, sizes_monochrome, num_menu_items));
+          sizes, sizes, sizes, num_menu_items));
 
   AddAppToRegistry(std::move(web_app));
   base::test::TestFuture<std::vector<base::flat_map<IconPurpose, base::flat_map<SquareSizePx, base::Time>>>> future;
@@ -723,23 +717,13 @@ TEST_F(WebAppIconManagerTest, ReadAllShortcutMenuIconsWithTimestamp) {
   }
 
   std::vector<base::flat_map<IconPurpose, base::flat_map<SquareSizePx, base::Time>>> time_data_map = future.Get();
-  EXPECT_FALSE(time_data_map[0][IconPurpose::ANY][icon_size::k64].is_null());
-  EXPECT_FALSE(time_data_map[0][IconPurpose::ANY][icon_size::k128].is_null());
-  EXPECT_FALSE(time_data_map[0][IconPurpose::ANY][icon_size::k256].is_null());
-  EXPECT_FALSE(time_data_map[0][IconPurpose::MASKABLE][icon_size::k64].is_null());
-  EXPECT_FALSE(time_data_map[0][IconPurpose::MONOCHROME][icon_size::k64].is_null());
-  
-  EXPECT_FALSE(time_data_map[1][IconPurpose::ANY][icon_size::k64].is_null());
-  EXPECT_FALSE(time_data_map[1][IconPurpose::ANY][icon_size::k128].is_null());
-  EXPECT_FALSE(time_data_map[1][IconPurpose::ANY][icon_size::k256].is_null());
-  EXPECT_FALSE(time_data_map[1][IconPurpose::MASKABLE][icon_size::k64].is_null());
-  EXPECT_FALSE(time_data_map[1][IconPurpose::MONOCHROME][icon_size::k64].is_null());
-
-  EXPECT_FALSE(time_data_map[2][IconPurpose::ANY][icon_size::k64].is_null());
-  EXPECT_FALSE(time_data_map[2][IconPurpose::ANY][icon_size::k128].is_null());
-  EXPECT_FALSE(time_data_map[2][IconPurpose::ANY][icon_size::k256].is_null());
-  EXPECT_FALSE(time_data_map[2][IconPurpose::MASKABLE][icon_size::k64].is_null());
-  EXPECT_FALSE(time_data_map[2][IconPurpose::MONOCHROME][icon_size::k64].is_null());
+  for (int i = 0; i < num_menu_items; ++i) {
+    for (IconPurpose purpose : kIconPurposes) {
+      for (int size : sizes) {
+        EXPECT_FALSE(time_data_map[0][purpose][size].is_null());
+      }
+    }
+  }
 }
 
 TEST_F(WebAppIconManagerTest, ReadAllIcons_AnyAndMaskable) {
