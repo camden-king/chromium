@@ -43,12 +43,7 @@ message RunOnOsLogin {
   optional RunOnOsLoginMode run_on_os_login_mode = 1;
 }
 
-message ShortcutIconData {
-  optional int size = 1;
-  optional timestamp = 2;
-}
-
-message ShortcutMenuState {
+message ShortcutMenu {
  optional string title = 1;
  optional string url = 2;
  repeated ShortcutIconData icon_data_any = 3;
@@ -68,6 +63,7 @@ message WebAppOsIntegrationState {
   optional ShortcutDescription shortcut = 1;
   optional ProtocolsHandled protocols_handled = 3;
   optional RunOnOsLogin run_on_os_login = 4;
+  repeated ShortcutMenu shortcut_menu = 5;
   optional OsUninstallRegistration uninstall_registration = 5;
   // Add data states for other OS integration hooks here.
   // New fields added to this message must also be added to:

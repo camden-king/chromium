@@ -19,7 +19,7 @@ class WebAppRegistrar;
 // TODO: camdenking add a not about what happens here
 class ShortcutMenuHandlingSubManager : public OsIntegrationSubManager {
  public:
-  explicit ShortcutMenuHandlingSubManager(WebAppIconManager& icon_manager);
+  explicit ShortcutMenuHandlingSubManager(WebAppIconManager& icon_manager, WebAppRegistrar registrar);
   ~ShortcutMenuHandlingSubManager() override;
   void Start() override;
   void Shutdown() override;
@@ -34,7 +34,12 @@ class ShortcutMenuHandlingSubManager : public OsIntegrationSubManager {
       base::OnceClosure callback) override;
 
  private:
+     void StoreShortcutMenuData(proto::WebAppOsIntegrationState& desired_state, std::string title, std::string url, WebAppIconManager::ShortcutIconDataVector data);
+
     const raw_ref<WebAppIconManager> icon_manager_;
+    const raw_ref<WebAppRegistrar> registrar_;
+
+    base::WeakPtrFactory<ShortcutMenuHandlingSubManager> weak_ptr_factory_{this};
 };
 }  // namespace web_app
 
