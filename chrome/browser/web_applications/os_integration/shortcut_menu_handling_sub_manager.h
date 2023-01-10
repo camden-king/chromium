@@ -19,7 +19,7 @@ class WebAppRegistrar;
 // TODO: camdenking add a not about what happens here
 class ShortcutMenuHandlingSubManager : public OsIntegrationSubManager {
  public:
-  explicit ShortcutMenuHandlingSubManager(WebAppIconManager& icon_manager, WebAppRegistrar registrar);
+  explicit ShortcutMenuHandlingSubManager(WebAppIconManager& icon_manager, WebAppRegistrar& registrar);
   ~ShortcutMenuHandlingSubManager() override;
   void Start() override;
   void Shutdown() override;
@@ -29,8 +29,9 @@ class ShortcutMenuHandlingSubManager : public OsIntegrationSubManager {
                          base::OnceClosure configure_done) override;
  void Execute(
       const AppId& app_id,
+      const absl::optional<SynchronizeOsOptions>& synchronize_options,
       const proto::WebAppOsIntegrationState& desired_state,
-      const absl::optional<proto::WebAppOsIntegrationState>& current_state,
+      const proto::WebAppOsIntegrationState& current_state,
       base::OnceClosure callback) override;
 
  private:
