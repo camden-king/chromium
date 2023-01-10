@@ -10,7 +10,6 @@
 #include "base/test/scoped_feature_list.h"
 #include "base/test/test_future.h"
 #include "chrome/browser/profiles/profile.h"
-#include "chrome/browser/web_applications/web_app_icon_generator.h"
 #include "chrome/browser/web_applications/os_integration/os_integration_manager.h"
 #include "chrome/browser/web_applications/proto/web_app_os_integration_state.pb.h"
 #include "chrome/browser/web_applications/test/fake_web_app_provider.h"
@@ -19,6 +18,7 @@
 #include "chrome/browser/web_applications/test/web_app_test.h"
 #include "chrome/browser/web_applications/test/web_app_test_utils.h"
 #include "chrome/browser/web_applications/web_app_command_scheduler.h"
+#include "chrome/browser/web_applications/web_app_icon_generator.h"
 #include "chrome/browser/web_applications/web_app_install_info.h"
 #include "chrome/browser/web_applications/web_app_install_params.h"
 #include "chrome/browser/web_applications/web_app_provider.h"
@@ -90,7 +90,9 @@ class ShortcutMenuHandlingSubManagerTest
     WebAppTest::TearDown();
   }
 
-  web_app::AppId InstallWebApp(webapps::WebappInstallSource install_source, const std::vector<GeneratedIconsInfo>& icons_info,
+  web_app::AppId InstallWebApp(
+      webapps::WebappInstallSource install_source,
+      const std::vector<GeneratedIconsInfo>& icons_info,
       int num_menu_items) {
     ShortcutsMenuIconBitmaps shortcuts_menu_icons;
 
@@ -113,7 +115,7 @@ class ShortcutMenuHandlingSubManagerTest
 
       shortcuts_menu_icons.push_back(std::move(menu_item_icon_map));
     }
-    
+
     std::unique_ptr<WebAppInstallInfo> info =
         std::make_unique<WebAppInstallInfo>();
     info->start_url = kWebAppUrl;
@@ -148,15 +150,16 @@ class ShortcutMenuHandlingSubManagerTest
 };
 
 TEST_P(ShortcutMenuHandlingSubManagerTest, TestConfigure) {
-    const int num_menu_items = 2;
+  const int num_menu_items = 2;
 
   const std::vector<int> sizes = {icon_size::k64, icon_size::k128};
   const std::vector<SkColor> colors = {SK_ColorRED, SK_ColorRED};
   const AppId& app_id =
-      InstallWebApp(webapps::WebappInstallSource::OMNIBOX_INSTALL_ICON, {{IconPurpose::ANY, sizes, colors},
-                                    {IconPurpose::MASKABLE, sizes, colors},
-                                    {IconPurpose::MONOCHROME, sizes, colors}},
-                                   num_menu_items);
+      InstallWebApp(webapps::WebappInstallSource::OMNIBOX_INSTALL_ICON,
+                    {{IconPurpose::ANY, sizes, colors},
+                     {IconPurpose::MASKABLE, sizes, colors},
+                     {IconPurpose::MONOCHROME, sizes, colors}},
+                    num_menu_items);
 
   auto state =
       provider().registrar_unsafe().GetAppCurrentOsIntegrationState(app_id);
@@ -166,43 +169,94 @@ TEST_P(ShortcutMenuHandlingSubManagerTest, TestConfigure) {
     ASSERT_TRUE(os_integration_state.shortcut_menu_size() == num_menu_items);
 
     ASSERT_TRUE(os_integration_state.shortcut_menu(0).title() == "Test App");
-    ASSERT_TRUE(os_integration_state.shortcut_menu(0).url() == "https://example.com/path/index.html");
+    ASSERT_TRUE(os_integration_state.shortcut_menu(0).url() ==
+                "https://example.com/path/index.html");
 
-    ASSERT_TRUE(os_integration_state.shortcut_menu(0).icon_data_any_size() == 2);
-    ASSERT_TRUE(os_integration_state.shortcut_menu(0).icon_data_any(0).icon_size() == icon_size::k64);
-    ASSERT_TRUE(os_integration_state.shortcut_menu(0).icon_data_any(0).has_timestamp());
-    ASSERT_TRUE(os_integration_state.shortcut_menu(0).icon_data_any(1).icon_size() == icon_size::k128);
-    ASSERT_TRUE(os_integration_state.shortcut_menu(0).icon_data_any(1).has_timestamp());
+    ASSERT_TRUE(os_integration_state.shortcut_menu(0).icon_data_any_size() ==
+                2);
+    ASSERT_TRUE(
+        os_integration_state.shortcut_menu(0).icon_data_any(0).icon_size() ==
+        icon_size::k64);
+    ASSERT_TRUE(
+        os_integration_state.shortcut_menu(0).icon_data_any(0).has_timestamp());
+    ASSERT_TRUE(
+        os_integration_state.shortcut_menu(0).icon_data_any(1).icon_size() ==
+        icon_size::k128);
+    ASSERT_TRUE(
+        os_integration_state.shortcut_menu(0).icon_data_any(1).has_timestamp());
 
-    ASSERT_TRUE(os_integration_state.shortcut_menu(0).icon_data_maskable_size() == 2);
-    ASSERT_TRUE(os_integration_state.shortcut_menu(0).icon_data_maskable(0).icon_size() == icon_size::k64);
-    ASSERT_TRUE(os_integration_state.shortcut_menu(0).icon_data_maskable(0).has_timestamp());
-    ASSERT_TRUE(os_integration_state.shortcut_menu(0).icon_data_maskable(1).icon_size() == icon_size::k128);
-    ASSERT_TRUE(os_integration_state.shortcut_menu(0).icon_data_maskable(1).has_timestamp());
+    ASSERT_TRUE(
+        os_integration_state.shortcut_menu(0).icon_data_maskable_size() == 2);
+    ASSERT_TRUE(os_integration_state.shortcut_menu(0)
+                    .icon_data_maskable(0)
+                    .icon_size() == icon_size::k64);
+    ASSERT_TRUE(os_integration_state.shortcut_menu(0)
+                    .icon_data_maskable(0)
+                    .has_timestamp());
+    ASSERT_TRUE(os_integration_state.shortcut_menu(0)
+                    .icon_data_maskable(1)
+                    .icon_size() == icon_size::k128);
+    ASSERT_TRUE(os_integration_state.shortcut_menu(0)
+                    .icon_data_maskable(1)
+                    .has_timestamp());
 
-    ASSERT_TRUE(os_integration_state.shortcut_menu(0).icon_data_monochrome_size() == 2);
-    ASSERT_TRUE(os_integration_state.shortcut_menu(0).icon_data_monochrome(0).icon_size() == icon_size::k64);
-    ASSERT_TRUE(os_integration_state.shortcut_menu(0).icon_data_monochrome(0).has_timestamp());
-    ASSERT_TRUE(os_integration_state.shortcut_menu(0).icon_data_monochrome(1).icon_size() == icon_size::k128);
-    ASSERT_TRUE(os_integration_state.shortcut_menu(0).icon_data_monochrome(1).has_timestamp());
+    ASSERT_TRUE(
+        os_integration_state.shortcut_menu(0).icon_data_monochrome_size() == 2);
+    ASSERT_TRUE(os_integration_state.shortcut_menu(0)
+                    .icon_data_monochrome(0)
+                    .icon_size() == icon_size::k64);
+    ASSERT_TRUE(os_integration_state.shortcut_menu(0)
+                    .icon_data_monochrome(0)
+                    .has_timestamp());
+    ASSERT_TRUE(os_integration_state.shortcut_menu(0)
+                    .icon_data_monochrome(1)
+                    .icon_size() == icon_size::k128);
+    ASSERT_TRUE(os_integration_state.shortcut_menu(0)
+                    .icon_data_monochrome(1)
+                    .has_timestamp());
 
-    ASSERT_TRUE(os_integration_state.shortcut_menu(1).icon_data_any_size() == 2);
-    ASSERT_TRUE(os_integration_state.shortcut_menu(1).icon_data_any(0).icon_size() == icon_size::k64);
-    ASSERT_TRUE(os_integration_state.shortcut_menu(1).icon_data_any(0).has_timestamp());
-    ASSERT_TRUE(os_integration_state.shortcut_menu(1).icon_data_any(1).icon_size() == icon_size::k128);
-    ASSERT_TRUE(os_integration_state.shortcut_menu(1).icon_data_any(1).has_timestamp());
+    ASSERT_TRUE(os_integration_state.shortcut_menu(1).icon_data_any_size() ==
+                2);
+    ASSERT_TRUE(
+        os_integration_state.shortcut_menu(1).icon_data_any(0).icon_size() ==
+        icon_size::k64);
+    ASSERT_TRUE(
+        os_integration_state.shortcut_menu(1).icon_data_any(0).has_timestamp());
+    ASSERT_TRUE(
+        os_integration_state.shortcut_menu(1).icon_data_any(1).icon_size() ==
+        icon_size::k128);
+    ASSERT_TRUE(
+        os_integration_state.shortcut_menu(1).icon_data_any(1).has_timestamp());
 
-    ASSERT_TRUE(os_integration_state.shortcut_menu(1).icon_data_maskable_size() == 2);
-    ASSERT_TRUE(os_integration_state.shortcut_menu(1).icon_data_maskable(0).icon_size() == icon_size::k64);
-    ASSERT_TRUE(os_integration_state.shortcut_menu(1).icon_data_maskable(0).has_timestamp());
-    ASSERT_TRUE(os_integration_state.shortcut_menu(1).icon_data_maskable(1).icon_size() == icon_size::k128);
-    ASSERT_TRUE(os_integration_state.shortcut_menu(1).icon_data_maskable(1).has_timestamp());
+    ASSERT_TRUE(
+        os_integration_state.shortcut_menu(1).icon_data_maskable_size() == 2);
+    ASSERT_TRUE(os_integration_state.shortcut_menu(1)
+                    .icon_data_maskable(0)
+                    .icon_size() == icon_size::k64);
+    ASSERT_TRUE(os_integration_state.shortcut_menu(1)
+                    .icon_data_maskable(0)
+                    .has_timestamp());
+    ASSERT_TRUE(os_integration_state.shortcut_menu(1)
+                    .icon_data_maskable(1)
+                    .icon_size() == icon_size::k128);
+    ASSERT_TRUE(os_integration_state.shortcut_menu(1)
+                    .icon_data_maskable(1)
+                    .has_timestamp());
 
-    ASSERT_TRUE(os_integration_state.shortcut_menu(1).icon_data_monochrome_size() == 2);
-    ASSERT_TRUE(os_integration_state.shortcut_menu(1).icon_data_monochrome(0).icon_size() == icon_size::k64);
-    ASSERT_TRUE(os_integration_state.shortcut_menu(1).icon_data_monochrome(0).has_timestamp());
-    ASSERT_TRUE(os_integration_state.shortcut_menu(1).icon_data_monochrome(1).icon_size() == icon_size::k128);
-    ASSERT_TRUE(os_integration_state.shortcut_menu(1).icon_data_monochrome(1).has_timestamp());
+    ASSERT_TRUE(
+        os_integration_state.shortcut_menu(1).icon_data_monochrome_size() == 2);
+    ASSERT_TRUE(os_integration_state.shortcut_menu(1)
+                    .icon_data_monochrome(0)
+                    .icon_size() == icon_size::k64);
+    ASSERT_TRUE(os_integration_state.shortcut_menu(1)
+                    .icon_data_monochrome(0)
+                    .has_timestamp());
+    ASSERT_TRUE(os_integration_state.shortcut_menu(1)
+                    .icon_data_monochrome(1)
+                    .icon_size() == icon_size::k128);
+    ASSERT_TRUE(os_integration_state.shortcut_menu(1)
+                    .icon_data_monochrome(1)
+                    .has_timestamp());
   } else {
     ASSERT_TRUE(os_integration_state.shortcut_menu_size() == 0);
   }

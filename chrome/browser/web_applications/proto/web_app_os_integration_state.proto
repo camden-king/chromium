@@ -44,13 +44,12 @@ message RunOnOsLogin {
 }
 
 message ShortcutMenu {
- optional string title = 1;
- optional string url = 2;
- repeated ShortcutIconData icon_data_any = 3;
- repeated ShortcutIconData icon_data_maskable = 4;
- repeated ShortcutIconData icon_data_monochrome = 5;
+  optional string title = 1;
+  optional string url = 2;
+  repeated ShortcutIconData icon_data_any = 3;
+  repeated ShortcutIconData icon_data_maskable = 4;
+  repeated ShortcutIconData icon_data_monochrome = 5;
 }
-
 
 message OsUninstallRegistration {
   optional bool registered_with_os = 1;
