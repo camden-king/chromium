@@ -11,6 +11,7 @@
 #include "base/test/test_future.h"
 #include "chrome/browser/profiles/profile.h"
 #include "chrome/browser/web_applications/os_integration/os_integration_manager.h"
+#include "chrome/browser/web_applications/os_integration/os_integration_test_override.h"
 #include "chrome/browser/web_applications/proto/web_app_os_integration_state.pb.h"
 #include "chrome/browser/web_applications/test/fake_web_app_provider.h"
 #include "chrome/browser/web_applications/test/web_app_icon_test_utils.h"
@@ -44,8 +45,8 @@ class ShortcutMenuHandlingSubManagerTest
     WebAppTest::SetUp();
     {
       base::ScopedAllowBlockingForTesting allow_blocking;
-      shortcut_override_ =
-          ShortcutOverrideForTesting::OverrideForTesting(base::GetHomeDir());
+      test_override_ =
+          OsIntegrationTestOverride::OverrideForTesting(base::GetHomeDir());
     }
     if (GetParam() == OsIntegrationSubManagersState::kSaveStateToDB) {
       scoped_feature_list_.InitAndEnableFeatureWithParameters(
@@ -84,7 +85,7 @@ class ShortcutMenuHandlingSubManagerTest
     test::UninstallAllWebApps(profile());
     {
       base::ScopedAllowBlockingForTesting allow_blocking;
-      shortcut_override_.reset();
+      test_override_.reset();
     }
     WebAppTest::TearDown();
   }
@@ -144,8 +145,8 @@ class ShortcutMenuHandlingSubManagerTest
  private:
   raw_ptr<FakeWebAppProvider> provider_;
   base::test::ScopedFeatureList scoped_feature_list_;
-  std::unique_ptr<ShortcutOverrideForTesting::BlockingRegistration>
-      shortcut_override_;
+  std::unique_ptr<OsIntegrationTestOverride::BlockingRegistration>
+      test_override_;
 };
 
 TEST_P(ShortcutMenuHandlingSubManagerTest, TestConfigure) {
