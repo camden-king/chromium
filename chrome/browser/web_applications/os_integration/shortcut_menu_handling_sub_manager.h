@@ -16,7 +16,8 @@ namespace web_app {
 
 class WebAppRegistrar;
 
-// TODO: camdenking add a not about what happens here
+// Used to track when icons in shortcut menu were last updated at and update
+// them once they are changed.
 class ShortcutMenuHandlingSubManager : public OsIntegrationSubManager {
  public:
   explicit ShortcutMenuHandlingSubManager(WebAppIconManager& icon_manager,
