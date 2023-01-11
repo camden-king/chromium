@@ -29,18 +29,13 @@ void ShortcutMenuHandlingSubManager::Configure(
     base::OnceClosure configure_done) {
   DCHECK(!desired_state.has_shortcut_menus());
 
-  DLOG(WARNING) << "here";
-
   if (!registrar_->IsLocallyInstalled(app_id)) {
-    DLOG(WARNING) << "returning without doing anything";
     std::move(configure_done).Run();
     return;
   }
-  DLOG(WARNING) << "here";
 
   std::string url = registrar_->GetAppLaunchUrl(app_id).spec();
   std::string title = registrar_->GetAppShortName(app_id);
-DLOG(WARNING) << "here";
   proto::ShortcutMenus* shortcut_menus = desired_state.mutable_shortcut_menus();
   icon_manager_->ReadAllShortcutMenuIconsWithTimestamp(
       app_id,
@@ -48,8 +43,6 @@ DLOG(WARNING) << "here";
                      weak_ptr_factory_.GetWeakPtr(), shortcut_menus,
                      title, url)
           .Then(std::move(configure_done)));
-
-          DLOG(WARNING) << "here";
 }
 
 void ShortcutMenuHandlingSubManager::Execute(
@@ -57,17 +50,19 @@ void ShortcutMenuHandlingSubManager::Execute(
     const absl::optional<SynchronizeOsOptions>& synchronize_options,
     const proto::WebAppOsIntegrationState& desired_state,
     const proto::WebAppOsIntegrationState& current_state,
-    base::OnceClosure callback) {}
+    base::OnceClosure callback) {
+      // Not implemented yet.
+  std::move(callback).Run();
+    }
 
 void ShortcutMenuHandlingSubManager::StoreShortcutMenuData(
     proto::ShortcutMenus* shortcut_menus,
     std::string title,   
     std::string url,
     WebAppIconManager::ShortcutIconDataVector data) {
-  DLOG(WARNING) << "inside the reading of data";
   for (auto& menu_item : data) {
-    proto::Menu* new_shortcut_menu_item =
-        shortcut_menus->add_menu();
+    proto::ShortcutMenuInfo* new_shortcut_menu_item =
+        shortcut_menus->add_shortcut_menu_info();
     new_shortcut_menu_item->set_title(title);
     new_shortcut_menu_item->set_url(url);
 
@@ -92,7 +87,6 @@ void ShortcutMenuHandlingSubManager::StoreShortcutMenuData(
       icon_data->set_timestamp(syncer::TimeToProtoTime(time));
     }
   }
-  DLOG(WARNING) << "inside the reading of data";
 }
 
 }  // namespace web_app

@@ -115,7 +115,7 @@ base::Value OsStatesDebugValue(
   }
 
   if (current_states.has_shortcut_menus()) {
-    for (const auto& shortcut_menu : current_states.shortcut_menus().menu()) {
+    for (const auto& shortcut_menu : current_states.shortcut_menus().shortcut_menu_info()) {
       base::Value::Dict icon_data_any_dict;
       base::Value::Dict icon_data_maskable_dict;
       base::Value::Dict icon_data_monochrome_dict;
@@ -140,6 +140,7 @@ base::Value OsStatesDebugValue(
       shortcut_menu_dict.Set("icon_data_any", base::Value(std::move(icon_data_any_dict)));
       shortcut_menu_dict.Set("icon_data_maskable", base::Value(std::move(icon_data_maskable_dict)));
       shortcut_menu_dict.Set("icon_data_monochrome", base::Value(std::move(icon_data_monochrome_dict)));
+      debug_dict.Set("shortcut_menus", base::Value(std::move(shortcut_menu_dict)));
     }
   }
 

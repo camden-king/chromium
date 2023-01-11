@@ -43,7 +43,7 @@ message RunOnOsLogin {
   optional RunOnOsLoginMode run_on_os_login_mode = 1;
 }
 
-message Menu {
+message ShortcutMenuInfo {
   optional string title = 1;
   optional string url = 2;
   repeated ShortcutIconData icon_data_any = 3;
@@ -52,7 +52,7 @@ message Menu {
 }
 
 message ShortcutMenus {
-  repeated Menu menu = 1;
+  repeated ShortcutMenuInfo shortcut_menu_info = 1; // todo change all occurances
 }
 
 message OsUninstallRegistration {
