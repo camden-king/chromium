@@ -356,18 +356,21 @@ TEST_P(ProtocolHandlingSynchronizeAndExecuteTest, Unregister) {
 }
 
 TEST_P(ProtocolHandlingSynchronizeAndExecuteTest, UpdateHandlers) {
+  DLOG(WARNING) << "here";
   apps::ProtocolHandlerInfo protocol_handler_approved;
   const std::string handler_url1 =
       std::string(kWebAppUrl.spec()) + "/testing=%s";
   protocol_handler_approved.url = GURL(handler_url1);
   protocol_handler_approved.protocol = "web+test";
 
+DLOG(WARNING) << "here";
   apps::ProtocolHandlerInfo protocol_handler_disapproved;
   const std::string handler_url2 =
       std::string(kWebAppUrl.spec()) + "/testing_protocol=%s";
   protocol_handler_disapproved.url = GURL(handler_url2);
   protocol_handler_disapproved.protocol = "web+test+protocol";
 
+DLOG(WARNING) << "here";
   const AppId app_id = InstallWebAppWithProtocolHandlers(
       {protocol_handler_approved, protocol_handler_disapproved});
   {
@@ -378,11 +381,15 @@ TEST_P(ProtocolHandlingSynchronizeAndExecuteTest, UpdateHandlers) {
     EXPECT_TRUE(disallowed_future.Wait());
   }
 
+  DLOG(WARNING) << "here";
+
   auto state =
       provider().registrar_unsafe().GetAppCurrentOsIntegrationState(app_id);
+      DLOG(WARNING) << "here";
   ASSERT_TRUE(state.has_value());
+  DLOG(WARNING) << "here";
   const proto::WebAppOsIntegrationState& os_integration_state = state.value();
-
+DLOG(WARNING) << "here";
   if (AreSubManagersExecuteEnabled()) {
     ASSERT_THAT(os_integration_state.protocols_handled().protocols_size(),
                 testing::Eq(1));
@@ -393,7 +400,7 @@ TEST_P(ProtocolHandlingSynchronizeAndExecuteTest, UpdateHandlers) {
     ASSERT_THAT(protocol_handler_state.protocol(),
                 testing::Eq(protocol_handler_approved.protocol));
     ASSERT_THAT(protocol_handler_state.url(), testing::Eq(handler_url1));
-
+DLOG(WARNING) << "here";
 #if BUILDFLAG(IS_MAC)
     ASSERT_THAT(GetAppShimRegisteredProtocolHandlers(app_id),
                 testing::ElementsAre(protocol_handler_approved.protocol));
@@ -413,6 +420,7 @@ TEST_P(ProtocolHandlingSynchronizeAndExecuteTest, UpdateHandlers) {
   } else {
     ASSERT_FALSE(os_integration_state.has_protocols_handled());
   }
+  DLOG(WARNING) << "here";
 }
 
 TEST_P(ProtocolHandlingSynchronizeAndExecuteTest, DataEqualNoOp) {

@@ -166,99 +166,99 @@ TEST_P(ShortcutMenuHandlingSubManagerTest, TestConfigure) {
   ASSERT_TRUE(state.has_value());
   const proto::WebAppOsIntegrationState& os_integration_state = state.value();
   if (AreOsIntegrationSubManagersEnabled()) {
-    ASSERT_TRUE(os_integration_state.shortcut_menu_size() == num_menu_items);
+    ASSERT_TRUE(os_integration_state.shortcut_menus().menu_size() == num_menu_items);
 
-    ASSERT_TRUE(os_integration_state.shortcut_menu(0).title() == "Test App");
-    ASSERT_TRUE(os_integration_state.shortcut_menu(0).url() ==
+    ASSERT_TRUE(os_integration_state.shortcut_menus().menu(0).title() == "Test App");
+    ASSERT_TRUE(os_integration_state.shortcut_menus().menu(0).url() ==
                 "https://example.com/path/index.html");
 
-    ASSERT_TRUE(os_integration_state.shortcut_menu(0).icon_data_any_size() ==
+    ASSERT_TRUE(os_integration_state.shortcut_menus().menu(0).icon_data_any_size() ==
                 2);
     ASSERT_TRUE(
-        os_integration_state.shortcut_menu(0).icon_data_any(0).icon_size() ==
+        os_integration_state.shortcut_menus().menu(0).icon_data_any(0).icon_size() ==
         icon_size::k64);
     ASSERT_TRUE(
-        os_integration_state.shortcut_menu(0).icon_data_any(0).has_timestamp());
+        os_integration_state.shortcut_menus().menu(0).icon_data_any(0).has_timestamp());
     ASSERT_TRUE(
-        os_integration_state.shortcut_menu(0).icon_data_any(1).icon_size() ==
+        os_integration_state.shortcut_menus().menu(0).icon_data_any(1).icon_size() ==
         icon_size::k128);
     ASSERT_TRUE(
-        os_integration_state.shortcut_menu(0).icon_data_any(1).has_timestamp());
+        os_integration_state.shortcut_menus().menu(0).icon_data_any(1).has_timestamp());
 
     ASSERT_TRUE(
-        os_integration_state.shortcut_menu(0).icon_data_maskable_size() == 2);
-    ASSERT_TRUE(os_integration_state.shortcut_menu(0)
+        os_integration_state.shortcut_menus().menu(0).icon_data_maskable_size() == 2);
+    ASSERT_TRUE(os_integration_state.shortcut_menus().menu(0)
                     .icon_data_maskable(0)
                     .icon_size() == icon_size::k64);
-    ASSERT_TRUE(os_integration_state.shortcut_menu(0)
+    ASSERT_TRUE(os_integration_state.shortcut_menus().menu(0)
                     .icon_data_maskable(0)
                     .has_timestamp());
-    ASSERT_TRUE(os_integration_state.shortcut_menu(0)
+    ASSERT_TRUE(os_integration_state.shortcut_menus().menu(0)
                     .icon_data_maskable(1)
                     .icon_size() == icon_size::k128);
-    ASSERT_TRUE(os_integration_state.shortcut_menu(0)
+    ASSERT_TRUE(os_integration_state.shortcut_menus().menu(0)
                     .icon_data_maskable(1)
                     .has_timestamp());
 
     ASSERT_TRUE(
-        os_integration_state.shortcut_menu(0).icon_data_monochrome_size() == 2);
-    ASSERT_TRUE(os_integration_state.shortcut_menu(0)
+        os_integration_state.shortcut_menus().menu(0).icon_data_monochrome_size() == 2);
+    ASSERT_TRUE(os_integration_state.shortcut_menus().menu(0)
                     .icon_data_monochrome(0)
                     .icon_size() == icon_size::k64);
-    ASSERT_TRUE(os_integration_state.shortcut_menu(0)
+    ASSERT_TRUE(os_integration_state.shortcut_menus().menu(0)
                     .icon_data_monochrome(0)
                     .has_timestamp());
-    ASSERT_TRUE(os_integration_state.shortcut_menu(0)
+    ASSERT_TRUE(os_integration_state.shortcut_menus().menu(0)
                     .icon_data_monochrome(1)
                     .icon_size() == icon_size::k128);
-    ASSERT_TRUE(os_integration_state.shortcut_menu(0)
+    ASSERT_TRUE(os_integration_state.shortcut_menus().menu(0)
                     .icon_data_monochrome(1)
                     .has_timestamp());
 
-    ASSERT_TRUE(os_integration_state.shortcut_menu(1).icon_data_any_size() ==
+    ASSERT_TRUE(os_integration_state.shortcut_menus().menu(1).icon_data_any_size() ==
                 2);
     ASSERT_TRUE(
-        os_integration_state.shortcut_menu(1).icon_data_any(0).icon_size() ==
+        os_integration_state.shortcut_menus().menu(1).icon_data_any(0).icon_size() ==
         icon_size::k64);
     ASSERT_TRUE(
-        os_integration_state.shortcut_menu(1).icon_data_any(0).has_timestamp());
+        os_integration_state.shortcut_menus().menu(1).icon_data_any(0).has_timestamp());
     ASSERT_TRUE(
-        os_integration_state.shortcut_menu(1).icon_data_any(1).icon_size() ==
+        os_integration_state.shortcut_menus().menu(1).icon_data_any(1).icon_size() ==
         icon_size::k128);
     ASSERT_TRUE(
-        os_integration_state.shortcut_menu(1).icon_data_any(1).has_timestamp());
+        os_integration_state.shortcut_menus().menu(1).icon_data_any(1).has_timestamp());
 
     ASSERT_TRUE(
-        os_integration_state.shortcut_menu(1).icon_data_maskable_size() == 2);
-    ASSERT_TRUE(os_integration_state.shortcut_menu(1)
+        os_integration_state.shortcut_menus().menu(1).icon_data_maskable_size() == 2);
+    ASSERT_TRUE(os_integration_state.shortcut_menus().menu(1)
                     .icon_data_maskable(0)
                     .icon_size() == icon_size::k64);
-    ASSERT_TRUE(os_integration_state.shortcut_menu(1)
+    ASSERT_TRUE(os_integration_state.shortcut_menus().menu(1)
                     .icon_data_maskable(0)
                     .has_timestamp());
-    ASSERT_TRUE(os_integration_state.shortcut_menu(1)
+    ASSERT_TRUE(os_integration_state.shortcut_menus().menu(1)
                     .icon_data_maskable(1)
                     .icon_size() == icon_size::k128);
-    ASSERT_TRUE(os_integration_state.shortcut_menu(1)
+    ASSERT_TRUE(os_integration_state.shortcut_menus().menu(1)
                     .icon_data_maskable(1)
                     .has_timestamp());
 
     ASSERT_TRUE(
-        os_integration_state.shortcut_menu(1).icon_data_monochrome_size() == 2);
-    ASSERT_TRUE(os_integration_state.shortcut_menu(1)
+        os_integration_state.shortcut_menus().menu(1).icon_data_monochrome_size() == 2);
+    ASSERT_TRUE(os_integration_state.shortcut_menus().menu(1)
                     .icon_data_monochrome(0)
                     .icon_size() == icon_size::k64);
-    ASSERT_TRUE(os_integration_state.shortcut_menu(1)
+    ASSERT_TRUE(os_integration_state.shortcut_menus().menu(1)
                     .icon_data_monochrome(0)
                     .has_timestamp());
-    ASSERT_TRUE(os_integration_state.shortcut_menu(1)
+    ASSERT_TRUE(os_integration_state.shortcut_menus().menu(1)
                     .icon_data_monochrome(1)
                     .icon_size() == icon_size::k128);
-    ASSERT_TRUE(os_integration_state.shortcut_menu(1)
+    ASSERT_TRUE(os_integration_state.shortcut_menus().menu(1)
                     .icon_data_monochrome(1)
                     .has_timestamp());
   } else {
-    ASSERT_TRUE(os_integration_state.shortcut_menu_size() == 0);
+    ASSERT_TRUE(!os_integration_state.has_shortcut_menus());
   }
 }
 

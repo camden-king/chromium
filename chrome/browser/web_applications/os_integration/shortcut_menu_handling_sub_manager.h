@@ -36,7 +36,7 @@ class ShortcutMenuHandlingSubManager : public OsIntegrationSubManager {
                base::OnceClosure callback) override;
 
  private:
-  void StoreShortcutMenuData(proto::WebAppOsIntegrationState& desired_state,
+  void StoreShortcutMenuData(proto::ShortcutMenus* shortcut_menus,
                              std::string title,
                              std::string url,
                              WebAppIconManager::ShortcutIconDataVector data);

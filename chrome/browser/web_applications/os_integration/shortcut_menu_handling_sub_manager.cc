@@ -27,22 +27,29 @@ void ShortcutMenuHandlingSubManager::Configure(
     const AppId& app_id,
     proto::WebAppOsIntegrationState& desired_state,
     base::OnceClosure configure_done) {
-  DCHECK(desired_state.shortcut_menu_size() == 0);
+  DCHECK(!desired_state.has_shortcut_menus());
+
+  DLOG(WARNING) << "here";
 
   if (!registrar_->IsLocallyInstalled(app_id)) {
+    DLOG(WARNING) << "returning without doing anything";
     std::move(configure_done).Run();
     return;
   }
+  DLOG(WARNING) << "here";
 
   std::string url = registrar_->GetAppLaunchUrl(app_id).spec();
   std::string title = registrar_->GetAppShortName(app_id);
-
+DLOG(WARNING) << "here";
+  proto::ShortcutMenus* shortcut_menus = desired_state.mutable_shortcut_menus();
   icon_manager_->ReadAllShortcutMenuIconsWithTimestamp(
       app_id,
       base::BindOnce(&ShortcutMenuHandlingSubManager::StoreShortcutMenuData,
-                     weak_ptr_factory_.GetWeakPtr(), std::ref(desired_state),
+                     weak_ptr_factory_.GetWeakPtr(), shortcut_menus,
                      title, url)
           .Then(std::move(configure_done)));
+
+          DLOG(WARNING) << "here";
 }
 
 void ShortcutMenuHandlingSubManager::Execute(
@@ -53,13 +60,14 @@ void ShortcutMenuHandlingSubManager::Execute(
     base::OnceClosure callback) {}
 
 void ShortcutMenuHandlingSubManager::StoreShortcutMenuData(
-    proto::WebAppOsIntegrationState& desired_state,
-    std::string title,
+    proto::ShortcutMenus* shortcut_menus,
+    std::string title,   
     std::string url,
     WebAppIconManager::ShortcutIconDataVector data) {
+  DLOG(WARNING) << "inside the reading of data";
   for (auto& menu_item : data) {
-    proto::ShortcutMenu* new_shortcut_menu_item =
-        desired_state.add_shortcut_menu();
+    proto::Menu* new_shortcut_menu_item =
+        shortcut_menus->add_menu();
     new_shortcut_menu_item->set_title(title);
     new_shortcut_menu_item->set_url(url);
 
@@ -84,6 +92,7 @@ void ShortcutMenuHandlingSubManager::StoreShortcutMenuData(
       icon_data->set_timestamp(syncer::TimeToProtoTime(time));
     }
   }
+  DLOG(WARNING) << "inside the reading of data";
 }
 
 }  // namespace web_app
