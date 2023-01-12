@@ -47,6 +47,28 @@ message OsUninstallRegistration {
   optional bool registered_with_os = 1;
 }
 
+// A mapping between a MIME type and a set of file extensions for a file handler "accept" entry. See chrome/browser/web_applications/web_app.h for details.
+message FileHandlerAccept {
+  optional string mimetype = 1;
+  repeated string file_extensions = 2;
+}
+
+message FileHandler {
+optional string action = 1;
+  	repeated FileHandlerAccept accept = 2;
+  	optional string display_name = 3;
+}
+
+message FileHandling {
+enum ApiApprovalState {
+    		REQUIRES_PROMPT = 0;
+    		ALLOWED = 1;
+    		DISALLOWED = 2;
+}
+optional ApiApprovalState approved = 1;
+	repeated FileHandler file_handlers = 2;
+}
+
 // Represents all the common OS Integration states to be stored in the web_app
 // DB that matches the values in the OS.
 message WebAppOsIntegrationState {
@@ -55,6 +77,7 @@ message WebAppOsIntegrationState {
   optional ProtocolsHandled protocols_handled = 3;
   optional RunOnOsLogin run_on_os_login = 4;
   optional OsUninstallRegistration uninstall_registration = 5;
+  optional FileHandling file_handling = 6;
   // Add data states for other OS integration hooks here.
   // New fields added to this message must also be added to:
   // OsStatesDebugValue()
