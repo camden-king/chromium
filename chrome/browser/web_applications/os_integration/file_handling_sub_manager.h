@@ -16,10 +16,12 @@ namespace web_app {
 
 class WebAppRegistrar;
 
-// TODO(camdenking): add a description here. 
+// Used to track updates to the file handlers for a web app. Specifically the
+// approval state, actions, display name, mimetypes and file extension types
+// accepted by the web app.
 class FileHandlingSubManager : public OsIntegrationSubManager {
  public:
-  explicit FileHandlingSubManager();
+  explicit FileHandlingSubManager(WebAppRegistrar& registrar);
   ~FileHandlingSubManager() override;
   void Start() override;
   void Shutdown() override;
@@ -33,6 +35,8 @@ class FileHandlingSubManager : public OsIntegrationSubManager {
                const proto::WebAppOsIntegrationState& current_state,
                base::OnceClosure callback) override;
 
+ private:
+  const raw_ref<WebAppRegistrar> registrar_;
 };
 
 }  // namespace web_app
