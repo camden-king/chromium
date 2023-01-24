@@ -10,6 +10,8 @@
 #include "base/time/time.h"
 #include "build/build_config.h"
 #include "build/chromeos_buildflags.h"
+#include "chrome/browser/flag_descriptions.h"
+#include "components/webapps/browser/features.h"
 #include "content/common/buildflags.h"
 
 namespace features {
@@ -1093,6 +1095,16 @@ BASE_FEATURE(kSubframeShutdownDelay,
              base::FEATURE_DISABLED_BY_DEFAULT
 #endif  // BUILDFLAG(IS_MAC) || BUILDFLAG(IS_WIN)
 );
+
+// Remove service worker check for web app installations.
+BASE_FEATURE(kSkipServiceWorkerCheckInstallOnly,
+             "SkipServiceWorkerCheckInstallOnly",
+             base::FEATURE_ENABLED_BY_DEFAULT);
+
+// Remove service worker check for omnibox install prompt.
+BASE_FEATURE(kSkipServiceWorkerForInstallPromot,
+             "SkipServiceWorkerForInstallPromot",
+             base::FEATURE_ENABLED_BY_DEFAULT);
 
 // If enabled, GetUserMedia API will only work when the concerned tab is in
 // focus
