@@ -1,19 +1,69 @@
 <style>
   /* TODO(crbug.com/1350406): update the style after UI design
    spec is finalized.*/
+  
   #container {
-    align-content: center;
-    align-items: center;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    height: auto;
-    justify-content: center;
-    justify-items: center;
-    margin: 0 auto;
-    max-width: 1500px;
-    padding: 50px;
-    width: auto;
+    max-width: 1088px;
+    justify-content: space-evenly; 
+    align-content: flex-start;
+    margin: auto; 
   }
+
+@media screen and (max-height: 649px) {
+    #container {
+        grid-row-gap: max(min(calc((100vh - (120px*3) - 24px*2) / 3), 96px), 8px);
+        padding-top: 24px;
+        padding-bottom: 24px;
+    }
+}
+@media screen and (min-height: 640px) and (max-height: 799px) {
+    #container {
+        grid-row-gap: max(min(calc((100vh - (120px*4) - (100vh * 1/16 + 24px)*2) / 4), 96px), 8px);
+        padding-top: calc(100vh * 1/24 + 24px);
+        padding-bottom: calc(100vh * 1/24 + 24px);
+    }
+}
+@media screen and (min-height: 800px) {
+    #container {
+        grid-row-gap: max(min(calc((100vh - (120px*5) - (100vh * 1/16 + 24px)*2) / 5), 96px), 8px);
+        padding-top: calc(100vh * 1/16 + 24px);
+        padding-bottom: calc(100vh * 1/16 + 24px);
+    }
+}
+
+@media screen and (max-width: 254px) {
+    #container {
+        grid-template-columns: repeat(1, max(100%/1, 112px));
+    }
+}
+@media screen and (min-width: 255px) and (max-width: 366px) {
+    #container {
+        grid-template-columns: repeat(2, max(100%/2, 112px));
+    }
+}
+@media screen and (min-width: 367px) and (max-width: 479px) {
+    #container {
+        grid-template-columns: repeat(3, max(100%/3, 112px));
+    }
+}
+@media screen and (min-width: 480px) and (max-width: 591px) {
+    #container {
+        grid-template-columns: repeat(4, max(100%/4, 112px));
+    }
+}
+@media screen and (min-width: 591px) {
+    #container {
+        grid-template-columns: repeat(5, max(100%/5, 112px));
+    }
+}
+
+.item {
+    background-color: green;
+    width: 96px;
+    height: 120px;
+    justify-self: center; 
+}
 
 </style>
 
