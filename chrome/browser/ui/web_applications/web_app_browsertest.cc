@@ -1651,6 +1651,10 @@ class WebAppBrowserTestUpdateShortcutResult
     }
   }
 
+  void TearDownOnMainThread() override {
+    test::UninstallAllWebApps(profile());
+  }
+
   ~WebAppBrowserTestUpdateShortcutResult() override = default;
 
  private:
