@@ -3494,6 +3494,13 @@ const char kPolicyMergeMultiSourceDescription[] =
     "a single source will not be treated as merged and will keep their "
     "original source.";
 
+const char kEnableVariationsGoogleGroupFilteringName[] =
+    "Enables filtering experiments by Google group membership";
+const char kEnableVariationsGoogleGroupFilteringDescription[] =
+    "Enables filtering of experiments by Google group membership. This feature "
+    "is experimental and is used only for dogfooding, and only for users who "
+    "are signed in and have Chrome Sync enabled.";
+
 // Android ---------------------------------------------------------------------
 
 #if BUILDFLAG(IS_ANDROID)
@@ -4248,10 +4255,6 @@ const char kWebFeedSortDescription[] =
 const char kXsurfaceMetricsReportingName[] = "Xsurface Metrics Reporting";
 const char kXsurfaceMetricsReportingDescription[] =
     "Allows metrics reporting state to be passed to Xsurface";
-
-const char kWebNotesDynamicTemplatesName[] = "Dynamic Templates";
-const char kWebNotesDynamicTemplatesDescription[] =
-    "Allows templates to be modified remotely on short notice.";
 
 const char kPasswordEditDialogWithDetailsName[] =
     "Password edit dialog with details UI";
@@ -6203,6 +6206,10 @@ const char kSmdsDbusMigrationDescription[] =
 const char kOobeJellyName[] = "Jelly design for OOBE";
 const char kOobeJellyDescription[] =
     "Feature to enable the Jelly design in out of box experience.";
+
+const char kOobeSimonName[] = "Simon features for OOBE";
+const char kOobeSimonDescription[] =
+    "Feature to enable the Simon features in out of box experience.";
 
 const char kLibAssistantV2MigrationName[] = "LibAssistant V2 migration";
 const char kLibAssistantV2MigrationDescription[] =

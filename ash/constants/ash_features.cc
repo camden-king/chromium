@@ -1166,6 +1166,11 @@ BASE_FEATURE(kVirtualKeyboardNewHeader,
 // features (e.g. auto-correct).
 BASE_FEATURE(kImeRuleConfig, "ImeRuleConfig", base::FEATURE_ENABLED_BY_DEFAULT);
 
+// If enabled, use the updated logic for downloading IME artifacts.
+BASE_FEATURE(kImeDownloaderUpdate,
+             "ImeDownloaderUpdate",
+             base::FEATURE_ENABLED_BY_DEFAULT);
+
 // If enabled, use the updated parameters for the decoder.
 BASE_FEATURE(kImeFstDecoderParamsUpdate,
              "ImeFstDecoderParamsUpdate",
@@ -1482,6 +1487,9 @@ BASE_FEATURE(kOobeHidDetectionRevamp,
 
 // Enables OOBE Jelly features.
 BASE_FEATURE(kOobeJelly, "OobeJelly", base::FEATURE_DISABLED_BY_DEFAULT);
+
+// Enables OOBE Simon features.
+BASE_FEATURE(kOobeSimon, "OobeSimon", base::FEATURE_DISABLED_BY_DEFAULT);
 
 // Enables or disables the Oobe quick start flow.
 BASE_FEATURE(kOobeQuickStart,
@@ -2891,6 +2899,10 @@ bool IsKioskLoginScreenEnabled() {
 bool IsOobeJellyEnabled() {
   return chromeos::features::IsJellyEnabled() &&
          base::FeatureList::IsEnabled(kOobeJelly);
+}
+
+bool IsOobeSimonEnabled() {
+  return base::FeatureList::IsEnabled(kOobeSimon);
 }
 
 bool IsOobeNetworkScreenSkipEnabled() {

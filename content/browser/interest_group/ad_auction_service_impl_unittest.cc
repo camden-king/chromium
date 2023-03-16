@@ -38,7 +38,6 @@
 #include "content/browser/private_aggregation/private_aggregation_test_utils.h"
 #include "content/browser/renderer_host/render_frame_host_impl.h"
 #include "content/browser/storage_partition_impl.h"
-#include "content/common/private_aggregation_features.h"
 #include "content/public/browser/browser_context.h"
 #include "content/public/common/content_client.h"
 #include "content/public/common/content_features.h"
@@ -1133,9 +1132,11 @@ TEST_F(AdAuctionServiceImplTest, UpdateAllUpdatableFields) {
   "%s/interest_group/new_trusted_bidding_signals_url.json",
 "trustedBiddingSignalsKeys": ["new_key"],
 "ads": [{"renderUrl": "%s/new_ad_render_url",
+         "sizeGroup": "group_new",
          "metadata": {"new_a": "b"}
         }],
 "adComponents": [{"renderUrl": "https://example.com/component_url",
+                  "sizeGroup": "group_new",
                   "metadata": {"new_c": "d"}
                  }],
 "adSizes": {"size_new": {"width": "300px", "height": "150px"}},
@@ -1162,8 +1163,15 @@ TEST_F(AdAuctionServiceImplTest, UpdateAllUpdatableFields) {
   interest_group.ads.emplace();
   blink::InterestGroup::Ad ad(
       /*render_url=*/GURL("https://example.com/render"),
+      /*size_group=*/"group_old",
       /*metadata=*/"{\"ad\":\"metadata\",\"here\":[1,2,3]}");
   interest_group.ads->emplace_back(std::move(ad));
+  interest_group.ad_components.emplace();
+  blink::InterestGroup::Ad ad_component(
+      /*render_url=*/GURL("https://example.com/render"),
+      /*size_group=*/"group_old",
+      /*metadata=*/"{\"ad\":\"metadata\",\"here\":[1,2,3]}");
+  interest_group.ad_components->emplace_back(std::move(ad_component));
   interest_group.ad_sizes.emplace();
   interest_group.ad_sizes->emplace(
       "size_old", blink::AdSize(640, blink::AdSize::LengthUnit::kPixels, 480,
@@ -1227,11 +1235,13 @@ TEST_F(AdAuctionServiceImplTest, UpdateAllUpdatableFields) {
   ASSERT_EQ(group.ads->size(), 1u);
   EXPECT_EQ(group.ads.value()[0].render_url.spec(),
             base::StringPrintf("%s/new_ad_render_url", kOriginStringA));
+  EXPECT_EQ(group.ads.value()[0].size_group, "group_new");
   EXPECT_EQ(group.ads.value()[0].metadata, "{\"new_a\":\"b\"}");
   ASSERT_TRUE(group.ad_components.has_value());
   ASSERT_EQ(group.ad_components->size(), 1u);
   EXPECT_EQ(group.ad_components.value()[0].render_url.spec(),
             "https://example.com/component_url");
+  EXPECT_EQ(group.ad_components.value()[0].size_group, "group_new");
   EXPECT_EQ(group.ad_components.value()[0].metadata, "{\"new_c\":\"d\"}");
   ASSERT_TRUE(group.ad_sizes.has_value());
   ASSERT_EQ(group.ad_sizes->size(), 1u);
@@ -6524,11 +6534,9 @@ class AdAuctionServiceImplPrivateAggregationEnabledTest
     : public AdAuctionServiceImplTest {
  public:
   AdAuctionServiceImplPrivateAggregationEnabledTest() {
-    feature_list_.InitWithFeatures(
-        /*enabled_features=*/{content::kPrivateAggregationApi,
-                              blink::features::
-                                  kPrivateAggregationApiFledgeExtensions},
-        /*disabled_features=*/{});
+    feature_list_.InitAndEnableFeatureWithParameters(
+        blink::features::kPrivateAggregationApi,
+        {{"fledge_extensions_enabled", "true"}});
   }
 
  protected:
@@ -7055,7 +7063,8 @@ class AdAuctionServiceImplPrivateAggregationDisabledTest
     : public AdAuctionServiceImplTest {
  public:
   AdAuctionServiceImplPrivateAggregationDisabledTest() {
-    feature_list_.InitAndDisableFeature(content::kPrivateAggregationApi);
+    feature_list_.InitAndDisableFeature(
+        blink::features::kPrivateAggregationApi);
   }
 
  protected:

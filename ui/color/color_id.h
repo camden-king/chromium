@@ -16,6 +16,7 @@
   E_CPONLY(kColorRefPrimary0, kUiColorsStart, kUiColorsStart) \
   E_CPONLY(kColorRefPrimary10) \
   E_CPONLY(kColorRefPrimary20) \
+  E_CPONLY(kColorRefPrimary25) \
   E_CPONLY(kColorRefPrimary30) \
   E_CPONLY(kColorRefPrimary40) \
   E_CPONLY(kColorRefPrimary50) \
@@ -30,7 +31,9 @@
   E_CPONLY(kColorRefSecondary10) \
   E_CPONLY(kColorRefSecondary15) \
   E_CPONLY(kColorRefSecondary20) \
+  E_CPONLY(kColorRefSecondary25) \
   E_CPONLY(kColorRefSecondary30) \
+  E_CPONLY(kColorRefSecondary35) \
   E_CPONLY(kColorRefSecondary40) \
   E_CPONLY(kColorRefSecondary50) \
   E_CPONLY(kColorRefSecondary60) \
@@ -76,6 +79,7 @@
   E_CPONLY(kColorRefNeutral20) \
   E_CPONLY(kColorRefNeutral22) \
   E_CPONLY(kColorRefNeutral24) \
+  E_CPONLY(kColorRefNeutral25) \
   E_CPONLY(kColorRefNeutral30) \
   E_CPONLY(kColorRefNeutral40) \
   E_CPONLY(kColorRefNeutral50) \
@@ -93,6 +97,7 @@
   E_CPONLY(kColorRefNeutral100) \
   E_CPONLY(kColorRefNeutralVariant0) \
   E_CPONLY(kColorRefNeutralVariant10) \
+  E_CPONLY(kColorRefNeutralVariant15) \
   E_CPONLY(kColorRefNeutralVariant20) \
   E_CPONLY(kColorRefNeutralVariant30) \
   E_CPONLY(kColorRefNeutralVariant40) \
@@ -151,11 +156,11 @@
   E_CPONLY(kColorSysTonalOutline) \
   E_CPONLY(kColorSysNeutralOutline) \
   E_CPONLY(kColorSysNeutralContainer) \
+  E_CPONLY(kColorSysDivider) \
   /* Chrome surfaces. */ \
   E_CPONLY(kColorSysBase) \
   E_CPONLY(kColorSysBaseContainer) \
   E_CPONLY(kColorSysBaseContainerElevated) \
-  E_CPONLY(kColorSysOnBase) \
   E_CPONLY(kColorSysOnBaseSecondary) \
   E_CPONLY(kColorSysOnBaseDivider) \
   E_CPONLY(kColorSysHeader) \
@@ -166,23 +171,24 @@
   E_CPONLY(kColorSysOnHeaderDividerInactive) \
   E_CPONLY(kColorSysOnHeaderPrimary) \
   E_CPONLY(kColorSysOnHeaderPrimaryInactive) \
-  /* Effects. */ \
-  E_CPONLY(kColorSysShadow) \
   /* States. */ \
   E_CPONLY(kColorSysStateHoverOnProminent) \
   E_CPONLY(kColorSysStateHoverOnSubtle) \
-  E_CPONLY(kColorSysStateRipplePrimary) \
   E_CPONLY(kColorSysStateRippleNeutralOnProminent) \
   E_CPONLY(kColorSysStateRippleNeutralOnSubtle) \
+  E_CPONLY(kColorSysStateRipplePrimary) \
   E_CPONLY(kColorSysStateFocusRing) \
+  E_CPONLY(kColorSysStateFocusHighlight) \
   E_CPONLY(kColorSysStateDisabled) \
   E_CPONLY(kColorSysStateDisabledContainer) \
-  E_CPONLY(kColorSysStateFocusHighlight) \
   E_CPONLY(kColorSysStateHoverCutout) \
   E_CPONLY(kColorSysStateHoverInverseCutout) \
   E_CPONLY(kColorSysStateOnHeaderHover) \
   E_CPONLY(kColorSysStateHeaderHover) \
+  /* Effects. */ \
+  E_CPONLY(kColorSysShadow) \
   /* Deprecated */ \
+  E_CPONLY(kColorSysOnBase) \
   E_CPONLY(kColorSysOnBaseBorder) \
   E_CPONLY(kColorSysStateHover) \
   E_CPONLY(kColorSysStateFocus) \

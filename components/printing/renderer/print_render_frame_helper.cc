@@ -2171,20 +2171,23 @@ void PrintRenderFrameHelper::Print(blink::WebLocalFrame* frame,
       return;
 
     // GetPrintSettingsFromUser() could return nullptr when
-    // |print_manager_host_| is closed.
-    if (!print_settings)
+    // |print_manager_host_| is closed, or when the user cancels.
+    if (!print_settings) {
+      if (print_manager_host_) {
+        // Release resources and fail silently if the user cancels.
+        DidFinishPrinting(OK);
+      }
       return;
+    }
+
+    CHECK(print_settings->params->document_cookie);
+    CHECK(!print_settings->params->dpi.IsEmpty());
 
     print_settings->params->print_scaling_option =
         print_settings->params->prefer_css_page_size
             ? mojom::PrintScalingOption::kSourceSize
             : scaling_option;
     SetPrintPagesParams(*print_settings);
-    if (print_settings->params->dpi.IsEmpty() ||
-        !print_settings->params->document_cookie) {
-      DidFinishPrinting(OK);  // Release resources and fail silently on failure.
-      return;
-    }
   }
 
   // Render Pages for printing.

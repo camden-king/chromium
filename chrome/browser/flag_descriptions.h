@@ -2005,6 +2005,9 @@ extern const char kDmTokenDeletionDescription[];
 extern const char kPolicyMergeMultiSourceName[];
 extern const char kPolicyMergeMultiSourceDescription[];
 
+extern const char kEnableVariationsGoogleGroupFilteringName[];
+extern const char kEnableVariationsGoogleGroupFilteringDescription[];
+
 // Android --------------------------------------------------------------------
 
 #if BUILDFLAG(IS_ANDROID)
@@ -2431,9 +2434,6 @@ extern const char kWebFeedSortDescription[];
 
 extern const char kXsurfaceMetricsReportingName[];
 extern const char kXsurfaceMetricsReportingDescription[];
-
-extern const char kWebNotesDynamicTemplatesName[];
-extern const char kWebNotesDynamicTemplatesDescription[];
 
 extern const char kPasswordEditDialogWithDetailsName[];
 extern const char kPasswordEditDialogWithDetailsDescription[];
@@ -3584,6 +3584,9 @@ extern const char kSmdsDbusMigrationDescription[];
 
 extern const char kOobeJellyName[];
 extern const char kOobeJellyDescription[];
+
+extern const char kOobeSimonName[];
+extern const char kOobeSimonDescription[];
 
 extern const char kLibAssistantV2MigrationName[];
 extern const char kLibAssistantV2MigrationDescription[];
